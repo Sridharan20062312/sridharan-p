@@ -1,0 +1,9 @@
+{
+  "name": "Guardian Safety",
+  "description": "Real-time safety app with live location tracking, SOS alerts, voice activation, and emergency integration.",
+  "requestFramePermissions": [
+    "geolocation",
+    "microphone"
+  ],
+  "majorCapabilities": []
+}

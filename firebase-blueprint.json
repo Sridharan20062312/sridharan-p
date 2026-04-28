@@ -1,0 +1,95 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User's basic safety profile and settings.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phoneNumber": { "type": "string" },
+        "lastKnownLocation": {
+          "type": "object",
+          "properties": {
+            "latitude": { "type": "number" },
+            "longitude": { "type": "number" },
+            "timestamp": { "type": "string", "format": "date-time" }
+          }
+        },
+        "isSafetyOn": { "type": "boolean" },
+        "isLiveSharing": { "type": "boolean" },
+        "alertSound": { "type": "string", "enum": ["alarm", "siren", "beep", "bell"] },
+        "geofenceSound": { "type": "string", "enum": ["none", "ding", "chime", "bubble"] },
+        "bio": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "emergencyContacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "phone": { "type": "string" },
+              "group": { "type": "string", "enum": ["Family", "Friends", "Other"] }
+            }
+          }
+        }
+      },
+      "required": ["uid", "email"]
+    },
+    "SOSAlert": {
+      "title": "SOS Alert",
+      "description": "An active or historical SOS alert.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "location": {
+          "type": "object",
+          "properties": {
+            "latitude": { "type": "number" },
+            "longitude": { "type": "number" }
+          }
+        },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["active", "resolved"] },
+        "message": { "type": "string" },
+        "targetGroup": { "type": "string", "enum": ["all", "Family", "Friends", "Other"] }
+      },
+      "required": ["userId", "location", "timestamp", "status"]
+    },
+    "SafeZone": {
+      "title": "Safe Zone",
+      "description": "A geofenced location marked as safe by the user.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "center": {
+          "type": "object",
+          "properties": {
+            "latitude": { "type": "number" },
+            "longitude": { "type": "number" }
+          }
+        },
+        "radius": { "type": "number", "description": "Radius in meters" },
+        "notifyMe": { "type": "boolean" },
+        "notifyContacts": { "type": "boolean" }
+      },
+      "required": ["name", "center", "radius"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Information about a specific user."
+    },
+    "/users/{userId}/safeZones/{zoneId}": {
+      "schema": "SafeZone",
+      "description": "Safe zones for a specific user."
+    },
+    "/alerts/{alertId}": {
+      "schema": "SOSAlert",
+      "description": "Emergency alerts created by users."
+    }
+  }
+}
